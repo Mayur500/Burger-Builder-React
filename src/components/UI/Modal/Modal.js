@@ -1,9 +1,13 @@
 import classes from '../Modal/Modal.module.css';
 import React from 'react';
-
+import Backdrop from '../Backdrop/Backdrop'
 const modal= (props)=>{
 
  return (
+     <>
+<Backdrop show ={props.show}
+clicked ={props.modalClosed}
+/>
 <div
 style={{
     transform:props.show?'translateY(0)':'translateY(-100vh)',
@@ -13,8 +17,8 @@ style={{
 {props.children}
 </div>
 
-
-);
+</>
+); 
 }
 
 export default modal;
