@@ -4,7 +4,7 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls.j
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner'
-import axios from '../../axios-orders';
+//import axios from '../../axios-orders';
 const INGREDIENT_PRICES = {
     salad:0.5,
     bacon:0.4,
@@ -72,31 +72,32 @@ addIngredientHandler = (type)=>{
          this.setState({totalPrice:newPrice,ingredients:updatedIngredients});
         
     }
- purchaseHandler= ()=>{
-
-this.setState({purchasing:true});
-
- }
  purchaseCancelHandler=()=>{
 if(this.state.error){
     this.setState({purchasing:false,error:false});
 }
 this.setState({purchasing:false});
  }
-purchaseContinueHandler=()=>{
+ purchaseHandler= ()=>{
+
+this.setState({purchasing:true});
+
+ }
+ purchaseContinueHandler=()=>{
   
-    this.setState({loading:true});
-  // /orders is url and .json is important for requesting on firebase 
-      axios.post('/orders.json',{
-          name:"TESTING",
-          'address':{
-              'PIN Code' :'110086'
-          }
-      }).then(response=>{
-         this.setState({loading:false,purchasing:false})
-     }).catch(err=>{
-        this.setState({loading:false,error:true})  
-     })
+ const queryParams=[];
+ for(let i in this.state.ingredients){
+ queryParams.push(encodeURIComponent(i)+'='+encodeURIComponent(this.state.ingredients[i]))
+ }  
+ queryParams.push('price='+ this.state.totalPrice);
+ const queryString= queryParams.join('&');
+
+ this.props.history.push({
+pathname:'/checkout',
+search:"?"+queryString
+ })
+    
+
 }    
     render (){
         const disabledInfo={
@@ -132,10 +133,7 @@ purchaseContinueHandler=()=>{
                price={this.state.totalPrice}
                purchasable={this.state.purchasable}
            />
-
-    
-
-    </>
+     </>
         );
     }
 
